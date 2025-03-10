@@ -31,11 +31,20 @@ const getPuntoAyuda = (req, res) => {
     });
 };
 
+// Servicio GET para obtener los puntos de ayuda activos
+const getPuntosActivos = (req, res) => {
+    connection.query("SELECT * FROM puntos_ayuda WHERE estado = 'activo'", (error, results) => {
+        if (error) {
+            console.error("Error al obtener puntos de ayuda activos:", error);
+            return res.status(500).json({ mensaje: "Error interno del servidor" });
+        }
+        res.status(200).json(results);
+    });
+};
 
 // Servicio GET para obtener un punto de ayuda
 // probar endpoint: localhost:3000/api/puntos/get/3
 const getUnPuntoAyuda = (req, res) => {
-    // Recibir el ID del administrador desde la consulta
     const { id } = req.params;
 
     // Obtener punto de ayuda en la base de datos
@@ -89,7 +98,7 @@ const postPuntoAyuda = (req, res) => {
 // localhost:3000/api/puntos/put/3
 const putPuntoAyuda = (req, res) => {
     const { id } = req.params;
-    const { admin_id, nombre, direccion, latitud, longitud, capacidad, recursos, contacto, estado } = req.body;
+    const { admin_id, nombre, direccion, latitud, longitud, capacidad, recursos, contacto, estado, creado_por } = req.body;
 
     if (!admin_id) {
         return res.status(400).json({ error: "Se requiere el ID del administrador." });
@@ -123,7 +132,8 @@ const putPuntoAyuda = (req, res) => {
             if (recursos) { updates.push("recursos = ?"); values.push(recursos); }
             if (contacto) { updates.push("contacto = ?"); values.push(contacto); }
             if (estado) { updates.push("estado = ?"); values.push(estado); }
-
+            if (creado_por) { updates.push("creado_por = ?"); values.push(creado_por); }
+            
             if (updates.length === 0) {
                 return res.status(400).json({ mensaje: "No hay campos para actualizar." });
             }
@@ -187,8 +197,9 @@ const deletePuntoAyuda = (req, res) => {
 };
 
 
-//Rutas que usa el administrador
+//Rutas que usa el administrador1
 router.get('/puntos/get', getPuntoAyuda);
+router.get('/puntosactivos/get', getPuntosActivos);
 router.get('/puntos/get/:id', getUnPuntoAyuda);
 router.post('/puntos/post', postPuntoAyuda);
 router.put('/puntos/put/:id', putPuntoAyuda);
