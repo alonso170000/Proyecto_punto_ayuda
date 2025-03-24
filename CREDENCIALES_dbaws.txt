@@ -1,0 +1,4 @@
+CREDENCIALES DE LA BASE DE DATOS DE AWS
+
+Usuario: admin
+Contraseña: root2025

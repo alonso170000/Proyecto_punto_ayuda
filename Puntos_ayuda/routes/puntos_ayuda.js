@@ -197,11 +197,218 @@ const deletePuntoAyuda = (req, res) => {
 };
 
 
-//Rutas que usa el administrador1
+/**
+ * @swagger
+ * /api/puntos/get:
+ *   get:
+ *     summary: Obtener todos los puntos de ayuda
+ *     tags: [Puntos de Ayuda]
+ *     security:
+ *       - BearerAuth: []  # Aplica el esquema de seguridad BearerAuth
+ *     parameters:
+ *       - in: query
+ *         name: admin_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 2
+ *         description: ID del administrador que realiza la solicitud.
+ *     responses:
+ *       200:
+ *         description: Lista de puntos de ayuda.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   nombre:
+ *                     type: string
+ *                     example: "Punto de Ayuda 1"
+ *                   direccion:
+ *                     type: string
+ *                     example: "Calle Falsa 123"
+ *                   latitud:
+ *                     type: number
+ *                     example: 40.416775
+ *                   longitud:
+ *                     type: number
+ *                     example: -3.703790
+ *                   capacidad:
+ *                     type: integer
+ *                     example: 100
+ *                   recursos:
+ *                     type: string
+ *                     example: "Agua, comida, medicinas"
+ *                   contacto:
+ *                     type: string
+ *                     example: "contacto@puntoayuda.com"
+ *                   estado:
+ *                     type: string
+ *                     example: "activo"
+ *                   creado_por:
+ *                     type: integer
+ *                     example: 2
+ *       403:
+ *         description: No tienes permisos para ver los puntos de ayuda.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.get('/puntos/get', getPuntoAyuda);
+
+/**
+ * @swagger
+ * /puntosactivos/get:
+ *   get:
+ *     summary: Obtener puntos de ayuda activos
+ *     tags: [Puntos de Ayuda]
+ *     description: Retorna una lista de puntos de ayuda con estado "activo".
+ *     responses:
+ *       200:
+ *         description: Lista de puntos de ayuda activos.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/PuntoAyuda'
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.get('/puntosactivos/get', getPuntosActivos);
+
+/**
+ * @swagger
+ * /puntos/get/{id}:
+ *   get:
+ *     summary: Obtener un punto de ayuda por ID
+ *     tags: [Puntos de Ayuda]
+ *     description: Retorna un punto de ayuda específico por su ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del punto de ayuda.
+ *     responses:
+ *       200:
+ *         description: Punto de ayuda encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PuntoAyuda'
+ *       404:
+ *         description: Punto de ayuda no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.get('/puntos/get/:id', getUnPuntoAyuda);
+
+/**
+ * @swagger
+ * /puntos/post:
+ *   post:
+ *     summary: Registrar un nuevo punto de ayuda
+ *     tags: [Puntos de Ayuda]
+ *     description: Crea un nuevo punto de ayuda. Solo accesible por administradores.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NuevoPuntoAyuda'
+ *     responses:
+ *       201:
+ *         description: Punto de ayuda registrado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                 id:
+ *                   type: integer
+ *       403:
+ *         description: No tienes permisos para registrar puntos de ayuda.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post('/puntos/post', postPuntoAyuda);
+
+/**
+ * @swagger
+ * /puntos/put/{id}:
+ *   put:
+ *     summary: Actualizar un punto de ayuda
+ *     tags: [Puntos de Ayuda]
+ *     description: Actualiza un punto de ayuda existente. Solo accesible por administradores.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del punto de ayuda a actualizar.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ActualizarPuntoAyuda'
+ *     responses:
+ *       200:
+ *         description: Punto de ayuda actualizado correctamente.
+ *       400:
+ *         description: No hay campos para actualizar o falta el ID del administrador.
+ *       403:
+ *         description: No tienes permisos para actualizar puntos de ayuda.
+ *       404:
+ *         description: Punto de ayuda no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.put('/puntos/put/:id', putPuntoAyuda);
+
+/**
+ * @swagger
+ * /puntos/delete/{id}:
+ *   delete:
+ *     summary: Eliminar un punto de ayuda
+ *     tags: [Puntos de Ayuda]
+ *     description: Elimina un punto de ayuda existente. Solo accesible por administradores o superadministradores.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del punto de ayuda a eliminar.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               admin_id:
+ *                 type: integer
+ *                 description: ID del administrador que realiza la solicitud.
+ *     responses:
+ *       200:
+ *         description: Punto de ayuda eliminado correctamente.
+ *       403:
+ *         description: No tienes permisos para eliminar puntos de ayuda.
+ *       404:
+ *         description: Punto de ayuda no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.delete('/puntos/delete/:id', deletePuntoAyuda);
+
 module.exports = router;
