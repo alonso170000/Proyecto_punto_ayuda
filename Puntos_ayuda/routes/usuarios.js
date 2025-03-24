@@ -154,10 +154,182 @@ const registrarUsuario = async (req, res) => {
     }
 };
 
-// Rutas
+// Servicio GET para obtener todos los administradores
+/**
+ * @swagger
+ * /admin/get/{id}:
+ *   get:
+ *     summary: Obtiene la lista de administradores
+ *     tags: [Administradores]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del superadministrador
+ *     responses:
+ *       200:
+ *         description: Lista de administradores obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   nombre:
+ *                     type: string
+ *                     example: "Admin 1"
+ *                   email:
+ *                     type: string
+ *                     example: "admin@example.com"
+ *                   telefono:
+ *                     type: string
+ *                     example: "9999999999"
+ *                   tipo:
+ *                     type: string
+ *                     example: "administrador"
+ *       403:
+ *         description: No autorizado
+ *       500:
+ *         description: Error interno del servidor
+ */
 router.get('/admin/get/:id', getAdmin);
+
+// Servicio POST para registrar un administrador
+/**
+ * @swagger
+ * /admin/post:
+ *   post:
+ *     summary: Registra un nuevo administrador
+ *     tags: [Administradores]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - superadmin_id
+ *               - nombre
+ *               - email
+ *               - contraseña
+ *               - telefono
+ *             properties:
+ *               superadmin_id:
+ *                 type: integer
+ *                 example: 1
+ *               nombre:
+ *                 type: string
+ *                 example: "Nuevo Admin"
+ *               email:
+ *                 type: string
+ *                 example: "nuevoadmin@example.com"
+ *               contraseña:
+ *                 type: string
+ *                 example: "password123"
+ *               telefono:
+ *                 type: string
+ *                 example: "9999999999"
+ *     responses:
+ *       201:
+ *         description: Administrador registrado exitosamente
+ *       403:
+ *         description: No autorizado
+ *       500:
+ *         description: Error en el servidor
+ */
 router.post('/admin/post', postAdmin);
-router.post('/usuario/post', registrarUsuario);
+
+// Servicio DELETE para eliminar un administrador
+/**
+ * @swagger
+ * /admin/delete:
+ *   delete:
+ *     summary: Elimina un administrador
+ *     tags: [Administradores]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - superadmin_id
+ *               - admin_id
+ *             properties:
+ *               superadmin_id:
+ *                 type: integer
+ *                 example: 1
+ *               admin_id:
+ *                 type: integer
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: Administrador eliminado correctamente
+ *       403:
+ *         description: No autorizado
+ *       404:
+ *         description: Administrador no encontrado
+ *       500:
+ *         description: Error en el servidor
+ */
 router.delete('/admin/delete', deleteAdmin);
+
+// Servicio POST para registrar un usuario
+/**
+ * @swagger
+ * /usuario/post:
+ *   post:
+ *     summary: Registra un nuevo usuario
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre
+ *               - email
+ *               - contraseña
+ *               - telefono
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: "Juan Pérez"
+ *               email:
+ *                 type: string
+ *                 example: "juan@example.com"
+ *               contraseña:
+ *                 type: string
+ *                 example: "password123"
+ *               telefono:
+ *                 type: string
+ *                 example: "9999999999"
+ *     responses:
+ *       201:
+ *         description: Usuario registrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: "Usuario registrado exitosamente"
+ *                 id:
+ *                   type: integer
+ *                   example: 15
+ *       400:
+ *         description: Datos inválidos
+ *       500:
+ *         description: Error en el servidor
+ */
+router.post('/usuario/post', registrarUsuario);
 
 module.exports = router;
