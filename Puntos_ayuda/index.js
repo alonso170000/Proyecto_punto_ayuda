@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true }));
  *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       500:
  *         description: Error en el servidor.
- */
+ */ 
 app.post("/api/login", (req, res) => {
     const user = {
         id: 1,

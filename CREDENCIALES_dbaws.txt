@@ -2,3 +2,5 @@ CREDENCIALES DE LA BASE DE DATOS DE AWS
 
 Usuario: admin
 Contraseña: root2025
+Punto de enlace: databasepuntosayuda.c5kkeew022ek.us-east-2.rds.amazonaws.com
+puerto: 3306
