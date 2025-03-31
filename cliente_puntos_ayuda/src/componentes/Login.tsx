@@ -1,34 +1,52 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
-// Login.tsx
-const Login = () => {
-    const [credentials, setCredentials] = useState({email: '', password: ''});
-    const navigate = useNavigate();
+const Login: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+ 
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
   
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      const success = await login(credentials); // Usa la función login definida arriba
-      if (success) {
-        navigate('/puntos-ayuda'); // Redirige al dashboard después del login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/api/usuario/get', { email, password });
+      
+      if (response.data.success) {
+        alert('Login exitoso');
+        navigate('/dashboard');
+      } else {
+        setError(response.data.message);
       }
-    };
-  
-    return (
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={credentials.email}
-          onChange={(e) => setCredentials({...credentials, email: e.target.value})}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={credentials.password}
-          onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
-    );
+    } catch (err) {
+      setError('Error en la conexión con el servidor');
+    }
   };
 
-  export default Login;
+  return (
+    <div className="login-container">
+      <form onSubmit={handleLogin} className="login-form">
+        <h2>Iniciar Sesión</h2>
+        {error && <p className="error">{error}</p>}
+        <label>
+          Correo electrónico:
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label>
+          Contraseña:
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </label>
+        {/* <label>
+          Admin:
+          <input type="Number" value={id} onChange={(e) => setIdAdmin(e.target.value)} required />
+        </label> */}
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;

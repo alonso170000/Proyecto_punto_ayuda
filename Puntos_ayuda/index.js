@@ -50,22 +50,22 @@ app.use(express.urlencoded({ extended: true }));
  *       500:
  *         description: Error en el servidor.
  */ 
-app.post("/api/login", (req, res) => {
-    const user = {
-        id: 1,
-        nombre: "Alonso",
-        email: "alonso@email.com"
-    };
+// app.post("/api/login", (req, res) => {
+//     const user = {
+//         id: 1,
+//         nombre: "Alonso",
+//         email: "alonso@email.com"
+//     };
   
-    jwt.sign({ user }, "secretkey", { expiresIn: "2h" }, (err, token) => {
-        res.json({ token });
-    });
-  });  
+//     jwt.sign({ user }, "secretkey", { expiresIn: "2h" }, (err, token) => {
+//         res.json({ token });
+//     });
+//   });  
 
 // Rutas
-app.use('/api', verifyToken, usuariosRoute);
-app.use('/api', verifyToken, puntosRoute);
-app.use('/api', verifyToken, solicitudRoute);
+app.use('/api',  usuariosRoute);
+app.use('/api', puntosRoute);
+app.use('/api', solicitudRoute);
 
 // Iniciar Swagger
 swaggerDocs(app);

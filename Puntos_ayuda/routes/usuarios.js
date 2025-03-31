@@ -3,6 +3,33 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const { connection } = require('../config/config.db'); // Importar la conexión a la base de datos
 
+const getUser = (req, res) => {
+    const { email, password } = req.body;
+  
+    // Consulta para obtener el usuario basado en el email
+    connection.query('SELECT id, email, contraseña, tipo FROM usuarios WHERE email = ?', [email], (err, results) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: 'Error en la base de datos' });
+      }
+  
+      if (results.length > 0) {
+        // Verificar la contraseña usando bcrypt
+        bcrypt.compare(password, results[0].contraseña, (err, isMatch) => {
+          if (err) {
+            return res.status(500).json({ success: false, message: 'Error al comparar las contraseñas' });
+          }
+  
+          if (isMatch) {
+            return res.json({ success: true, message: 'Login exitoso', user: results[0] });
+          } else {
+            return res.json({ success: false, message: 'Credenciales incorrectas' });
+          }
+        });
+      } else {
+        return res.json({ success: false, message: 'Usuario no encontrado' });
+      }
+    });
+  };
 // Servicio GET para obtener todas los puntos de ayuda
 // localhost:3000/api/admin/get/1?superadmin_id=1
 const getAdmin = (req, res) => {
@@ -198,6 +225,7 @@ const registrarUsuario = async (req, res) => {
  *       500:
  *         description: Error interno del servidor
  */
+router.post('/usuario/get', getUser)
 router.get('/admin/get/:id', getAdmin);
 
 // Servicio POST para registrar un administrador
