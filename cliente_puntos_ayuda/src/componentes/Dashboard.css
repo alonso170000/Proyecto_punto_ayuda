@@ -1,0 +1,53 @@
+
+/*--- Dashboard.css ---*/
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 226.5vh;
+    background-color: #000000;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #000000;
+    color: rgb(190, 228, 224);
+    padding: 1rem;
+}
+
+.sidebar-title {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+.sidebar-nav li {
+    margin: 1rem 0;   
+}
+
+.sidebar-link {
+    color: rgb(154, 188, 195);
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-link:hover {
+    background-color: #0a0033;
+    color: rgb(255, 255, 255);
+}
+
+.main-content {
+    flex: content;
+    padding: 1rem;
+    background-color: rgb(15, 25, 55);
+}
