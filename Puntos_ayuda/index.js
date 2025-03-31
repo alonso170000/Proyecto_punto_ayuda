@@ -8,6 +8,9 @@ const usuariosRoute = require('./routes/usuarios');
 const puntosRoute = require('./routes/puntos_ayuda');
 const solicitudRoute = require('./routes/solicitudes_ayuda');
 
+const cors = require("cors");
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -51,7 +54,7 @@ app.post("/api/login", (req, res) => {
     const user = {
         id: 1,
         nombre: "Alonso",
-        email: "alonso@email.com",
+        email: "alonso@email.com"
     };
   
     jwt.sign({ user }, "secretkey", { expiresIn: "2h" }, (err, token) => {

@@ -2,22 +2,34 @@ const jwt = require("jsonwebtoken");
 
 function verifyToken(req, res, next) {
     const bearerHeader = req.headers["authorization"];
-
-    if (typeof bearerHeader !== "undefined") {
-        const bearerToken = bearerHeader.split(" ")[1]; // Extraer el token
-        req.token = bearerToken;
-
-        jwt.verify(req.token, "secretkey", (error, authData) => {
-            if (error) {
-                return res.sendStatus(403); // Acceso prohibido si el token es inválido
-            } else {
-                req.authData = authData; // Almacenar los datos del usuario en la request
-                next(); // Continuar con la ejecución de la ruta
-            }
-        });
-    } else {
-        res.sendStatus(403); // Acceso prohibido si no hay token
+    
+    if (!bearerHeader) {
+        console.log("Acceso denegado: No se proporcionó token");
+        return res.status(401).json({ mensaje: "Token no proporcionado" });
     }
+
+    const token = bearerHeader.split(" ")[1];
+    
+    if (!token) {
+        console.log("Acceso denegado: Formato de token incorrecto");
+        return res.status(401).json({ mensaje: "Formato de token incorrecto" });
+    }
+
+    jwt.verify(token, "secretkey", (error, decoded) => {
+        if (error) {
+            console.log("Token inválido:", error.message);
+            
+            if (error.name === "TokenExpiredError") {
+                return res.status(401).json({ mensaje: "Token expirado" });
+            }
+            
+            return res.status(403).json({ mensaje: "Token inválido", error });
+        }
+        
+        console.log("Token verificado para usuario:", decoded.user);
+        req.user = decoded.user;
+        next();
+    });
 }
 
 module.exports = verifyToken;
