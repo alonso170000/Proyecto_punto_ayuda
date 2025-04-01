@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../api/client"; 
 import "./PuntosAyuda.css";
-
-const API_URL = "http://localhost:3000/api";
 
 interface PuntoAyuda {
   id: number;
@@ -37,74 +35,36 @@ const PuntosAyuda = () => {
 
   useEffect(() => {
     const fetchPuntos = async () => {
-        try {
-          const response = await axios.get<PuntoAyuda[]>(
-            `${API_URL}/puntos/get?admin_id=2`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`, // Agrega el token JWT
-              },
-            }
-          );
-          console.log("[DEBUG] Token enviado en headers:", localStorage.getItem("token"));
-          setPuntos(response.data);
-        } catch (error) {
-          console.error("Error al obtener puntos de ayuda", error);
+      try {
+        const response = await apiClient.get("/puntos/get?admin_id=2");
+        setPuntos(response.data);
+      } catch (error) {
+        console.error("Error al obtener puntos:", error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+          //window.location.href = "/login";
         }
-      };          
+      }
+    };
     fetchPuntos();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setNuevoPunto((prev) => ({ ...prev, [name]: value }));
+    setNuevoPunto(prev => ({ ...prev, [name]: value }));
   };
-
-  const handleLogin = async () => {  
-    try {  
-        // Realiza la solicitud POST para iniciar sesión  
-        const response = await axios.post("http://localhost:3000/api/login", {  
-            id: 1,  
-            nombre: "Alonso",  
-            email: "alonso@email.com"  
-        });  
-
-        // Imprime la respuesta completa del servidor para depuración  
-        console.log("[DEBUG] Respuesta del servidor:", response);  
-
-        // Verifica si la respuesta contiene un token  
-        if (response.data && response.data.token) {  
-            // Guarda el token en localStorage  
-            localStorage.setItem("token", response.data.token);  
-            console.log("[DEBUG] Token guardado en localStorage:", localStorage.getItem("token"));  
-            alert("Login exitoso");  
-        } else {  
-            console.error("[ERROR] No se recibió un token válido");  
-            alert("Error: No se recibió un token válido.");  
-        }  
-    } catch (error) {  
-        // Maneja y muestra el error en caso de que la solicitud falle  
-        console.error("[ERROR] Error en login:", error);  
-        alert("Error en el proceso de login, verifica la consola para más detalles.");  
-    }  
-};  
-
 
   const handleSubmit = async () => {
     try {
-      await axios.post(API_URL, {
+      await apiClient.post("/puntos", {
         ...nuevoPunto,
         capacidad: parseInt(nuevoPunto.capacidad),
       });
-      alert("Punto de ayuda agregado");
-      setMostrarFormulario(false);
-      // Refrescar los datos en lugar de recargar la página
-      const response = await axios.get<PuntoAyuda[]>(API_URL);
+      
+      // Refrescar datos
+      const response = await apiClient.get("/puntos/get?admin_id=2");
       setPuntos(response.data);
+      setMostrarFormulario(false);
       setNuevoPunto({
         nombre: "",
         direccion: "",
@@ -114,37 +74,38 @@ const PuntosAyuda = () => {
         estado: "activo",
       });
     } catch (error) {
-      console.error("Error al agregar", error);
+      console.error("Error al agregar:", error);
     }
   };
 
   const handleUpdate = async (id: number) => {
     try {
-      await axios.put(`${API_URL}/${id}`, {
+      await apiClient.put(`/puntos/${id}`, {
         ...nuevoPunto,
         capacidad: parseInt(nuevoPunto.capacidad),
       });
-      alert("Punto actualizado");
-      // Refrescar los datos
-      const response = await axios.get<PuntoAyuda[]>(API_URL);
+      
+      const response = await apiClient.get("/puntos/get?admin_id=2");
       setPuntos(response.data);
     } catch (error) {
-      console.error("Error al actualizar", error);
+      console.error("Error al actualizar:", error);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("¿Seguro que quieres eliminar este punto de ayuda?")) {
+    if (window.confirm("¿Eliminar este punto?")) {
       try {
-        await axios.delete(`${API_URL}/${id}`);
-        alert("Punto de ayuda eliminado");
-        // Actualizar el estado local en lugar de recargar
-        setPuntos(puntos.filter((punto) => punto.id !== id));
+        await apiClient.delete(`/puntos/${id}`);
+        setPuntos(puntos.filter(punto => punto.id !== id));
       } catch (error) {
-        console.error("Error al eliminar", error);
+        console.error("Error al eliminar:", error);
       }
     }
   };
+
+
+//Aqui cambias
+
 
   return (
     <div className="puntos-container">

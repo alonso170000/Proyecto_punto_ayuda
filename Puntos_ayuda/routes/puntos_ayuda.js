@@ -258,7 +258,7 @@ const deletePuntoAyuda = (req, res) => {
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/puntos/get', getPuntoAyuda);
+router.get('/get', getPuntoAyuda);
 
 /**
  * @swagger
@@ -307,7 +307,7 @@ router.get('/puntosactivos/get', getPuntosActivos);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/puntos/get/:id', getUnPuntoAyuda);
+router.get('/get/:id', getUnPuntoAyuda);
 
 /**
  * @swagger
@@ -339,7 +339,7 @@ router.get('/puntos/get/:id', getUnPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.post('/puntos/post', postPuntoAyuda);
+router.post('/post', postPuntoAyuda);
 
 /**
  * @swagger
@@ -373,7 +373,7 @@ router.post('/puntos/post', postPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.put('/puntos/put/:id', putPuntoAyuda);
+router.put('/put/:id', putPuntoAyuda);
 
 /**
  * @swagger
@@ -409,6 +409,6 @@ router.put('/puntos/put/:id', putPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.delete('/puntos/delete/:id', deletePuntoAyuda);
+router.delete('/delete/:id', deletePuntoAyuda);
 
 module.exports = router;

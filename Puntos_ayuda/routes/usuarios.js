@@ -198,7 +198,7 @@ const registrarUsuario = async (req, res) => {
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/admin/get/:id', getAdmin);
+router.get('/admin/get/:id', getAdmin);// aki no le quite lo del principio de admin puede q de error
 
 // Servicio POST para registrar un administrador
 /**
