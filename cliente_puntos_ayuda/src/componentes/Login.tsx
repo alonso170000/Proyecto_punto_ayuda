@@ -1,34 +1,56 @@
+// src/pages/Login.tsx
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../api/auth';
+import './Login.css';
+import { setAuthToken } from '../utils/auth';
 
-// Login.tsx
 const Login = () => {
-    const [credentials, setCredentials] = useState({email: '', password: ''});
-    const navigate = useNavigate();
-  
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      const success = await login(credentials); // Usa la función login definida arriba
-      if (success) {
-        navigate('/puntos-ayuda'); // Redirige al dashboard después del login
-      }
-    };
-  
-    return (
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Paso 1: Enviar credenciales al servidor
+      const { token } = await login(email, password);
+      
+      // Paso 2: Guardar token recibido
+      setAuthToken(token);
+      
+      // Paso 3: Redirigir a área privada
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Credenciales incorrectas' );
+    }
+  };
+
+  return (
+    <div>
+      <h2>Login</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          value={credentials.email}
-          onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
+          required
         />
         <input
           type="password"
-          value={credentials.password}
-          onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          required
         />
         <button type="submit">Login</button>
       </form>
-    );
-  };
+    </div>
+  );
+};
 
-  export default Login;
+export default Login;

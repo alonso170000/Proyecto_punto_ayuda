@@ -8,8 +8,10 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ mensaje: "Token no proporcionado" });
     }
 
-    const token = bearerHeader.split(" ")[1];
-    
+    console.log("[DEBUG] Header Authorization recibido:", bearerHeader);
+
+    const token = bearerHeader.split(" ")[1]; // Extrae el token sin "Bearer"
+
     if (!token) {
         console.log("Acceso denegado: Formato de token incorrecto");
         return res.status(401).json({ mensaje: "Formato de token incorrecto" });
@@ -26,7 +28,7 @@ function verifyToken(req, res, next) {
             return res.status(403).json({ mensaje: "Token inválido", error });
         }
         
-        console.log("Token verificado para usuario:", decoded.user);
+        console.log(" Token verificado para usuario:", decoded.user);
         req.user = decoded.user;
         next();
     });

@@ -37,21 +37,21 @@ const PuntosAyuda = () => {
 
   useEffect(() => {
     const fetchPuntos = async () => {
-      try {
-        const response = await axios.get<PuntoAyuda[]>(
-          `${API_URL}/puntos/get?admin_id=2`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Agrega el token JWT
-            },
-          }
-        );
-        console.log("Datos recibidos:", response.data);
-        setPuntos(response.data);
-      } catch (error) {
-        console.error("Error al obtener puntos de ayuda", error);
-      }
-    };
+        try {
+          const response = await axios.get<PuntoAyuda[]>(
+            `${API_URL}/puntos/get?admin_id=2`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`, // Agrega el token JWT
+              },
+            }
+          );
+          console.log("[DEBUG] Token enviado en headers:", localStorage.getItem("token"));
+          setPuntos(response.data);
+        } catch (error) {
+          console.error("Error al obtener puntos de ayuda", error);
+        }
+      };          
     fetchPuntos();
   }, []);
 
@@ -64,18 +64,34 @@ const PuntosAyuda = () => {
     setNuevoPunto((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogin = async () => {
-    try {
-        const response = await axios.post("http://localhost:3000/api/login", {
-            email: "alonso@email.com",
-            password: "1234" // Cambia según el backend
-        });
-        localStorage.setItem("token", response.data.token);
-        alert("Login exitoso");
-    } catch (error) {
-        console.error("Error en login", error);
-    }
-};
+  const handleLogin = async () => {  
+    try {  
+        // Realiza la solicitud POST para iniciar sesión  
+        const response = await axios.post("http://localhost:3000/api/login", {  
+            id: 1,  
+            nombre: "Alonso",  
+            email: "alonso@email.com"  
+        });  
+
+        // Imprime la respuesta completa del servidor para depuración  
+        console.log("[DEBUG] Respuesta del servidor:", response);  
+
+        // Verifica si la respuesta contiene un token  
+        if (response.data && response.data.token) {  
+            // Guarda el token en localStorage  
+            localStorage.setItem("token", response.data.token);  
+            console.log("[DEBUG] Token guardado en localStorage:", localStorage.getItem("token"));  
+            alert("Login exitoso");  
+        } else {  
+            console.error("[ERROR] No se recibió un token válido");  
+            alert("Error: No se recibió un token válido.");  
+        }  
+    } catch (error) {  
+        // Maneja y muestra el error en caso de que la solicitud falle  
+        console.error("[ERROR] Error en login:", error);  
+        alert("Error en el proceso de login, verifica la consola para más detalles.");  
+    }  
+};  
 
 
   const handleSubmit = async () => {
