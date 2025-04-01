@@ -7,17 +7,18 @@ function verifyToken(req, res, next) {
         console.log("Acceso denegado: No se proporcionó token");
         return res.status(401).json({ mensaje: "Token no proporcionado" });
     }
-
+    
     console.log("[DEBUG] Header Authorization recibido:", bearerHeader);
 
-    const token = bearerHeader.split(" ")[1]; // Extrae el token sin "Bearer"
+    const token = req.headers.authorization?.split(' ')[1];  // "Bearer <token>" // Extrae el token sin "Bearer"
+    console.log("[DEBUG] Token extraído:", token);
 
     if (!token) {
         console.log("Acceso denegado: Formato de token incorrecto");
         return res.status(401).json({ mensaje: "Formato de token incorrecto" });
     }
 
-    jwt.verify(token, "secretkey", (error, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
         if (error) {
             console.log("Token inválido:", error.message);
             
