@@ -1,0 +1,110 @@
+/* Estilos para la cabecera */  
+.tbody {  
+    background-color: #030013; /* Color de fondo del cuerpo */  
+    font-family: Arial, sans-serif; /* Fuente del cuerpo */  
+}
+
+.tapp-header {  
+    background-color: #2c3e50;
+    color: rgb(0, 0, 0);
+    padding: 1rem 2rem;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);  
+}  
+
+.theader-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tapp-title {  
+    color: #ffffff;
+    margin: 0;
+    font-size: 1.8rem;  
+}  
+
+.tauth-buttons {  
+    display: flex;
+    gap: 15px;  
+}  
+
+.tlogin-button,
+.tnecesidades-button,  
+.tregister-button {  
+    background-color: #007292; /* Color del fondo de los botones */  
+    color: #fcfcfc; /* Color del texto de los botones */  
+    border: none;  
+    border-radius: 5px;  
+    padding: 10px 15px;  
+    cursor: pointer;  
+    transition: background-color 0.3s;  
+}  
+
+.tlogin-button:hover,
+.tnecesidades-button:hover,  
+.tregister-button:hover {  
+    background-color: #043052; /* Color de fondo al pasar el ratón sobre botones */  
+}  
+
+/* Estilos para el contenedor del mapa */  
+.tmapa-puntos-container {  
+    display: flex;  
+    flex-direction: column;  
+    align-items: center;  
+}  
+
+/* Estilos para el mapa */  
+.tmapa-container {  
+    width: 100%;  
+    max-width: 1200px; /* Ancho máximo del mapa */  
+    margin-bottom: 20px; /* Espaciado inferior */  
+}  
+
+/* Estilos para la lista de puntos */  
+.tpuntos-lista {  
+    font-size: 15px; /* Tamaño de fuente */
+    color: #ffffff;
+    width: 100%;  
+    max-width: 1200px; /* Ancho máximo de la lista */  
+    margin: 0 auto; /* Centrado */  
+    padding: 20px; /* Espaciado interior */  
+    background-color: #090919; /* Color de fondo para la lista */  
+    border-radius: 5px; /* Bordes redondeados */  
+    box-shadow: 0 2px 5px rgba(249, 249, 249, 0.1); /* Sombra */  
+}  
+
+.tpuntos-lista h3 {
+    color: #7c90ff;
+    font-size: 25px;
+}
+.tpunto-card {  
+    padding: 15px;  
+    border: 0.1px solid #444e92; /* Borde de las tarjetas */  
+    border-radius: 5px; /* Bordes redondeados */  
+    margin-bottom: 15px; /* Espaciado entre tarjetas */  
+    background-color: #03000f; /* Color de fondo de las tarjetas */  
+    transition: transform 0.2s; /* Transición para efecto hover */  
+}  
+
+.tpunto-card:hover {  
+    transform: scale(1.03); /* Efecto hover */  
+}  
+
+/* Estilos de carga y error */  
+.tloading, .terror {  
+    padding: 15px;  
+    text-align: center; /* Centrado del texto */  
+    margin: 15px 0; /* Espaciado superior e inferior */  
+    font-size: 18px; /* Tamaño de fuente */  
+}  
+.tloading {  
+    color: #007BFF; /* Color del texto de carga */  
+}  
+.terror {  
+    color: #FF0000; /* Color del texto de error */  
+}  
+
+

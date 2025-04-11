@@ -2,8 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const { connection } = require('../config/config.db'); // Importar la conexión a la base de datos
+const verifyToken = require("../middlewares/auth");
 
-// Servicio GET para obtener todas los puntos de ayuda
+// Servicio GET para obtener todas los administradores
 // localhost:3000/api/admin/get/1?superadmin_id=1
 const getAdmin = (req, res) => {
     // Recibir el ID del superadmin desde la consulta 
@@ -20,7 +21,7 @@ const getAdmin = (req, res) => {
             return res.status(403).json({ mensaje: 'No tienes permisos para ver administradores' });
         }
 
-        // Obtener los puntos de ayuda en la base de datos
+        // Obtener los administradores en la base de datos
         connection.query('SELECT * FROM usuarios WHERE tipo = "administrador"', (err, rows) => {
             if (err) {
                 console.error('Error al obtener administradores:', err);
@@ -120,6 +121,11 @@ const registrarUsuario = async (req, res) => {
             return res.status(400).json({ mensaje: "Todos los campos son obligatorios." });
         }
 
+        // Validación de email
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ mensaje: "El formato del correo electrónico no es válido." });
+        }
+
         // Verificar si el email ya está registrado
         connection.query('SELECT id FROM usuarios WHERE email = ?', [email], async (err, results) => {
             if (err) {
@@ -134,9 +140,9 @@ const registrarUsuario = async (req, res) => {
             // Hashear la contraseña
             const hashedPassword = await bcrypt.hash(contraseña, 10);
 
-            // Insertar nuevo usuario en la base de datos
+            // Insertar nuevo usuario como 'afectado'
             connection.query(
-                'INSERT INTO usuarios (nombre, email, contraseña, telefono, tipo) VALUES (?, ?, ?, ?, "usuario")',
+                'INSERT INTO usuarios (nombre, email, contraseña, telefono, tipo) VALUES (?, ?, ?, ?, "afectado")',
                 [nombre, email, hashedPassword, telefono],
                 (err, result) => {
                     if (err) {
@@ -144,7 +150,10 @@ const registrarUsuario = async (req, res) => {
                         return res.status(500).json({ mensaje: 'Error interno del servidor' });
                     }
 
-                    res.status(201).json({ mensaje: "Usuario registrado exitosamente", id: result.insertId });
+                    res.status(201).json({ 
+                        mensaje: "Registro exitoso. Ahora puedes iniciar sesión.",
+                        id: result.insertId 
+                    });
                 }
             );
         });
@@ -198,7 +207,7 @@ const registrarUsuario = async (req, res) => {
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/admin/get/:id', getAdmin);// aki no le quite lo del principio de admin puede q de error
+router.get('/admin/get/:id', verifyToken, getAdmin);
 
 // Servicio POST para registrar un administrador
 /**
@@ -243,7 +252,7 @@ router.get('/admin/get/:id', getAdmin);// aki no le quite lo del principio de ad
  *       500:
  *         description: Error en el servidor
  */
-router.post('/admin/post', postAdmin);
+router.post('/admin/post', verifyToken, postAdmin);
 
 // Servicio DELETE para eliminar un administrador
 /**
@@ -278,7 +287,7 @@ router.post('/admin/post', postAdmin);
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/admin/delete', deleteAdmin);
+router.delete('/admin/delete', verifyToken, deleteAdmin);
 
 // Servicio POST para registrar un usuario
 /**

@@ -1,4 +1,5 @@
 .puntos-container {
+    font-family: Arial;
     background-color: #040b22;
     padding: 1rem;
     border-radius: 20px;
@@ -20,6 +21,7 @@
   }
   
   th {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: #00040f;
     color: rgb(101, 174, 177);
   }
@@ -68,6 +70,7 @@
   }
   
   .modal input, .modal textarea{
+    color: #b3b3b3;
     width: 80%;
     padding: 8px;
     margin-bottom: 15px;
@@ -78,6 +81,7 @@
   }
 
   .modal select {
+    color: #b3b3b3;
     width: 84%;
     padding: 8px;
     margin-bottom: 25px;
@@ -91,7 +95,7 @@
     display: inline-block;
     justify-content: space-evenly;
   }
-  
+
   .modal-buttons button {
     padding: 8px 14px;
     border: none;
@@ -105,6 +109,6 @@
   
   .modal-buttons button:last-child {
     background: rgb(189, 0, 0);
-    color: white;
+    color: rgb(255, 255, 255);
   }
   

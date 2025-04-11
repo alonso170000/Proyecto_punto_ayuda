@@ -1,53 +1,136 @@
-
 /*--- Dashboard.css ---*/
-
 .dashboard-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
-    height: 100vh;
-    width: 226.5vh;
-    background-color: #000000;
+    min-height: 100vh;
+    background-color: #0f0f1a;
+    color: #e0e0e0;
 }
 
 .sidebar {
-    width: 200px;
-    background-color: #000000;
-    color: rgb(190, 228, 224);
-    padding: 1rem;
+    width: 250px;
+    background-color: #1a1a2e;
+    padding: 1.5rem 1rem;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-header {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #2a2a3c;
+    margin-bottom: 1.5rem;
 }
 
 .sidebar-title {
-    font-size: 1.7rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4cc9f0;
     margin-bottom: 1rem;
     text-align: center;
+}
+
+.sidebar-logout {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #f72585;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sidebar-logout:hover {
+    background-color: #b5179e;
 }
 
 .sidebar-nav {
     list-style: none;
     padding: 0;
-    text-align: center;
 }
 
 .sidebar-nav li {
-    margin: 1rem 0;   
+    margin-bottom: 0.8rem;
 }
 
 .sidebar-link {
-    color: rgb(154, 188, 195);
+    color: #dbdbdb;
     text-decoration: none;
-    display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
-.sidebar-link:hover {
-    background-color: #0a0033;
-    color: rgb(255, 255, 255);
+.asidebar-link {
+    color: #dbdbdb;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.sidebar-link:hover, 
+.sidebar-link.active {
+    background-color: #2a2a3c;
+    color: #ffffff;
+}
+
+.asidebar-link:hover, 
+.asidebar-link.active {
+    background-color: #2a2a3c;
+    color: #ffffff;
+}
+
+.sidebar-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.asidebar-link i {
+    width: 10px;
+    text-align: center;
 }
 
 .main-content {
-    flex: content;
-    padding: 1rem;
-    background-color: rgb(15, 25, 55);
+    flex: 1;
+    padding: 2rem;
+    background-color: #0f0f1a;
+    overflow-y: auto;
+}
+
+/* Estilos para Font Awesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .sidebar-nav li {
+        margin: 0;
+    }
+    
+    .sidebar-link {
+        padding: 0.5rem;
+    }
 }

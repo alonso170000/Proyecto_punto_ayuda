@@ -1,0 +1,96 @@
+.gestion-usuarios {
+    padding: 20px;
+    color: #e0e0e0;
+}
+
+.gu-subtitle {
+    color: #a1a1a1;
+    margin-bottom: 20px;
+}
+
+.gu-table-container {
+    overflow-x: auto;
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    padding: 1px;
+}
+
+.gu-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gu-table th, .gu-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a3c;
+}
+
+.gu-table th {
+    background-color: #2a2a3c;
+    color: #4cc9f0;
+    font-weight: 600;
+}
+
+.gu-table tr:hover {
+    background-color: #2a2a3c;
+}
+
+.gu-tipo-select {
+    padding: 5px 8px;
+    border-radius: 4px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.gu-tipo-afectado {
+    background-color: #4361ee;
+    color: white;
+}
+
+.gu-tipo-voluntario {
+    background-color: #4cc9f0;
+    color: #0f0f1a;
+}
+
+.gu-tipo-administrador {
+    background-color: #f72585;
+    color: white;
+}
+
+.gu-action-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px 8px;
+    border-radius: 4px;
+}
+
+.gu-edit {
+    color: #4cc9f0;
+}
+
+.gu-edit:hover {
+    background-color: rgba(76, 201, 240, 0.1);
+}
+
+.gu-delete {
+    color: #f72585;
+}
+
+.gu-delete:hover {
+    background-color: rgba(247, 37, 133, 0.1);
+}
+
+.gu-loading, .gu-error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+}
+
+.gu-error {
+    color: #f72585;
+}

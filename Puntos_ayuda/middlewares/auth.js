@@ -29,8 +29,8 @@ function verifyToken(req, res, next) {
             return res.status(403).json({ mensaje: "Token inválido", error });
         }
         
-        console.log(" Token verificado para usuario:", decoded.user);
-        req.user = decoded.user;
+        console.log(" Token verificado para usuario:", decoded);
+        req.user = decoded;
         next();
     });
 }

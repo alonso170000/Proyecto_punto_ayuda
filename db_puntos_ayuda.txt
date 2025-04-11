@@ -12,7 +12,6 @@ CREATE TABLE usuarios (
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE puntos_ayuda (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -38,6 +37,19 @@ CREATE TABLE solicitudes_ayuda (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,
     FOREIGN KEY (punto_ayuda_id) REFERENCES puntos_ayuda(id) ON DELETE CASCADE
 );
+
+CREATE TABLE solicitudes_ayuda (  
+    id INT AUTO_INCREMENT PRIMARY KEY,  
+    usuario_id INT,  
+    punto_ayuda_id INT,  
+    tipo_ayuda VARCHAR(50) NOT NULL,
+    descripcion TEXT NOT NULL,  
+    contacto VARCHAR(100) NOT NULL,    
+    estado ENUM('pendiente', 'atendida', 'rechazada') DEFAULT 'pendiente',  
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,  
+    FOREIGN KEY (punto_ayuda_id) REFERENCES puntos_ayuda(id) ON DELETE CASCADE  
+);  
 
 
 CREATE TABLE notificaciones (
