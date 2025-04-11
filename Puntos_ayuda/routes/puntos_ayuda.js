@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { connection } = require('../config/config.db'); // Importar la conexión a la base de datos
+const { connection } = require('../config/config.db');
+const verifyToken = require("../middlewares/auth");
 
 // Servicio GET para obtener todas los puntos de ayuda
 // probar endpoint: localhost:3000/api/puntos/get?admin_id=2
@@ -64,6 +65,7 @@ const getUnPuntoAyuda = (req, res) => {
 
 
 // Servicio POST para registrar un nuevo punto de ayuda
+//probar http://localhost:3000/api/puntos/post
 const postPuntoAyuda = (req, res) => {
     const { nombre, direccion, latitud, longitud, capacidad, recursos, contacto, creado_por } = req.body;
 
@@ -94,7 +96,7 @@ const postPuntoAyuda = (req, res) => {
     });
 };
 
-// Servicio PUT para actualozar puntos de ayuda
+// Servicio PUT para actualizar puntos de ayuda
 // localhost:3000/api/puntos/put/3
 const putPuntoAyuda = (req, res) => {
     const { id } = req.params;
@@ -258,7 +260,7 @@ const deletePuntoAyuda = (req, res) => {
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/get', getPuntoAyuda);
+router.get('/get', verifyToken, getPuntoAyuda);
 
 /**
  * @swagger
@@ -307,7 +309,7 @@ router.get('/puntosactivos/get', getPuntosActivos);
  *       500:
  *         description: Error interno del servidor.
  */
-router.get('/get/:id', getUnPuntoAyuda);
+router.get('/get/:id', verifyToken, getUnPuntoAyuda);
 
 /**
  * @swagger
@@ -339,7 +341,7 @@ router.get('/get/:id', getUnPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.post('/post', postPuntoAyuda);
+router.post('/post', verifyToken, postPuntoAyuda);
 
 /**
  * @swagger
@@ -373,7 +375,7 @@ router.post('/post', postPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.put('/put/:id', putPuntoAyuda);
+router.put('/put/:id', verifyToken, putPuntoAyuda);
 
 /**
  * @swagger
@@ -409,6 +411,6 @@ router.put('/put/:id', putPuntoAyuda);
  *       500:
  *         description: Error interno del servidor.
  */
-router.delete('/delete/:id', deletePuntoAyuda);
+router.delete('/delete/:id', verifyToken, deletePuntoAyuda);
 
 module.exports = router;

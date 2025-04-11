@@ -1,0 +1,137 @@
+/* Estilos base */
+.afectado-container {
+    margin: 0 auto;
+    color: #ffffff;
+    
+  }
+  
+  .afectado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444e92;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  
+  /* Pestañas */
+  .afectado-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444e92;
+    padding-bottom: 10px;
+  }
+  
+  .tab-button {
+    background-color: #007292;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .tab-button:hover {
+    background-color: #043052;
+  }
+  
+  .tab-button.active {
+    background-color: #043052;
+    font-weight: bold;
+  }
+  
+  /* Contenido */
+  .afectado-content {
+    background-color: #090919;
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 500px;
+  }
+  
+  /* Formulario de solicitud */
+  .solicitud-form {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group select,
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    background-color: #1c1c1c;
+    color: #ffffff;
+    border: 1px solid #444e92;
+    border-radius: 4px;
+  }
+  
+  .submit-button {
+    background-color: #006a27;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .submit-button:hover {
+    background-color: #003f1a;
+  }
+  
+  /* Lista de solicitudes */
+  .solicitudes-list {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial;
+  }
+  
+  .solicitud-card {
+    background-color: #03000f;
+    border: 1px solid #444e92;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .estado-pendiente {
+    color: #f39c12;
+  }
+  
+  .estado-atendida {
+    color: #2ecc71;
+  }
+  
+  /* Botón de cerrar sesión */
+  .logout-button {
+    background-color: #9c0000;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #540000;
+  }
+  
+  /* Ajustes para el mapa */
+  .mapa-container {
+    height: 500px;
+    width: 100%;
+    margin-top: 20px;
+  }

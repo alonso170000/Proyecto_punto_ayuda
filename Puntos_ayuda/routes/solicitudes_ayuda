@@ -1,23 +1,167 @@
 const express = require('express');
 const router = express.Router();
 const { connection } = require('../config/config.db');
+const verifyToken = require('../middlewares/auth');
 
-const postSolicitudAyuda = (req, res) => {
-    const { punto_ayuda_id, usuario_id, tipo_ayuda, descripcion, contacto } = req.body;
+// Endpoint para que los administradores vean todas las solicitudes
+const getSolicitudesAdmin = (req, res) => {
+    if (!req.user || (req.user.tipo !== 'administrador' && req.user.tipo !== 'superadmin')) {
+        return res.status(403).json({ mensaje: "No autorizado" });
+    }
 
-    // Insertar en la base de datos
     connection.query(
-        "INSERT INTO solicitudes_ayuda (punto_ayuda_id, usuario_id, tipo_ayuda, descripcion, contacto) VALUES (?, ?, ?, ?, ?)",
-        [punto_ayuda_id, usuario_id, tipo_ayuda, descripcion, contacto],
-        (err, result) => {
+        `SELECT s.id, s.tipo_ayuda, s.descripcion, s.contacto, s.estado, s.fecha,
+         u.nombre as usuario_nombre, p.nombre as punto_ayuda_nombre
+         FROM solicitudes_ayuda s
+         JOIN usuarios u ON s.usuario_id = u.id
+         JOIN puntos_ayuda p ON s.punto_ayuda_id = p.id
+         ORDER BY s.fecha DESC`,
+        (err, results) => {
             if (err) {
-                console.error("Error al registrar solicitud de ayuda:", err);
+                console.error("Error al obtener solicitudes:", err);
                 return res.status(500).json({ mensaje: "Error interno del servidor" });
             }
-            res.status(201).json({ mensaje: "Solicitud de ayuda registrada", id: result.insertId });
+            res.status(200).json(results);
         }
     );
 };
 
-router.post('/solicitud/post', postSolicitudAyuda);
+const postSolicitudAyuda = (req, res) => {
+    // Verificar autenticación (middleware verifyToken ya hace esto)
+    if (!req.user || !req.user.userId) {
+        return res.status(401).json({ mensaje: "No autorizado. Token inválido o expirado." });
+    }
+
+    const { punto_ayuda_id, tipo_ayuda, descripcion, contacto } = req.body;
+    const usuario_id = req.user.userId;
+
+    // Validación más completa
+    if (!punto_ayuda_id || !tipo_ayuda || !descripcion || !contacto) {
+        return res.status(400).json({ 
+            mensaje: "Todos los campos son obligatorios",
+            camposFaltantes: {
+                punto_ayuda_id: !punto_ayuda_id,
+                tipo_ayuda: !tipo_ayuda,
+                descripcion: !descripcion,
+                contacto: !contacto
+            }
+        });
+    }
+
+    // Validar tipos de datos
+    if (isNaN(parseInt(punto_ayuda_id))) {
+        return res.status(400).json({ mensaje: "ID de punto de ayuda inválido" });
+    }
+
+    // Verificar que el punto de ayuda existe (usando promesas para mejor manejo)
+    new Promise((resolve, reject) => {
+        connection.query(
+            "SELECT id FROM puntos_ayuda WHERE id = ? AND estado = 'activo' LIMIT 1",
+            [punto_ayuda_id],
+            (err, results) => {
+                if (err) return reject(err);
+                if (results.length === 0) {
+                    return reject(new Error("Punto de ayuda no encontrado o inactivo"));
+                }
+                resolve(true);
+            }
+        );
+    })
+    .then(() => {
+        // Insertar la solicitud
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `INSERT INTO solicitudes_ayuda 
+                (usuario_id, punto_ayuda_id, tipo_ayuda, descripcion, contacto, estado) 
+                VALUES (?, ?, ?, ?, ?, 'pendiente')`,
+                [usuario_id, punto_ayuda_id, tipo_ayuda, descripcion, contacto],
+                (err, result) => {
+                    if (err) return reject(err);
+                    resolve(result);
+                }
+            );
+        });
+    })
+    .then((result) => {
+        // Registrar notificación
+        connection.query(
+            `INSERT INTO notificaciones 
+            (usuario_id, mensaje) 
+            VALUES (?, ?)`,
+            [usuario_id, `Solicitud de ${tipo_ayuda} recibida (ID: ${result.insertId})`],
+            (notifErr) => {
+                if (notifErr) console.error("Error en notificación:", notifErr);
+            }
+        );
+        
+        res.status(201).json({ 
+            success: true,
+            mensaje: "Solicitud registrada correctamente",
+            solicitudId: result.insertId
+        });
+    })
+    .catch((error) => {
+        console.error("Error en proceso:", error);
+        res.status(500).json({ 
+            success: false,
+            mensaje: error.message || "Error interno al procesar la solicitud"
+        });
+    });
+};
+
+// Nuevo endpoint para obtener solicitudes del usuario
+const getSolicitudesUsuario = (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ mensaje: "No autorizado" });
+    }
+
+    connection.query(
+        `SELECT s.id, s.tipo_ayuda, s.descripcion, s.contacto, s.estado, s.fecha,
+         p.nombre as punto_ayuda_nombre, p.direccion as punto_ayuda_direccion
+         FROM solicitudes_ayuda s
+         JOIN puntos_ayuda p ON s.punto_ayuda_id = p.id
+         WHERE s.usuario_id = ?
+         ORDER BY s.fecha DESC`,
+        [req.user.userId],
+        (err, results) => {
+            if (err) {
+                console.error("Error al obtener solicitudes:", err);
+                return res.status(500).json({ mensaje: "Error interno del servidor" });
+            }
+            res.status(200).json(results);
+        }
+    );
+};
+
+const getPuntosConNecesidades = (req, res) => {
+    connection.query(`
+        SELECT p.*, 
+               GROUP_CONCAT(s.tipo_ayuda) as necesidades,
+               COUNT(s.id) as solicitudes_pendientes
+        FROM puntos_ayuda p
+        LEFT JOIN solicitudes_ayuda s ON p.id = s.punto_ayuda_id AND s.estado = 'pendiente'
+        WHERE p.estado = 'activo'
+        GROUP BY p.id
+        HAVING solicitudes_pendientes > 0
+    `, (err, results) => {
+        if (err) {
+            console.error('Error al obtener puntos con necesidades:', err);
+            return res.status(500).json({ mensaje: 'Error interno del servidor' });
+        }
+        
+        // Transformar necesidades de string a array
+        const puntos = results.map(punto => ({
+            ...punto,
+            necesidades: punto.necesidades ? punto.necesidades.split(',') : []
+        }));
+        
+        res.status(200).json(puntos);
+    });
+};
+
+router.get('/admin', verifyToken, getSolicitudesAdmin);
+router.get('/necesidades', getPuntosConNecesidades);
+router.post('/post', verifyToken, postSolicitudAyuda);
+router.get('/usuario', verifyToken, getSolicitudesUsuario);
+
 module.exports = router;

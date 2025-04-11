@@ -1,0 +1,124 @@
+.gestion-solicitudes {
+    padding: 20px;
+    color: #e0e0e0;
+}
+
+.gs-subtitle {
+    color: #a1a1a1;
+    margin-bottom: 20px;
+}
+
+.gs-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.gs-filter-select, .gs-filter-input {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #2a2a3c;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+
+.gs-filter-select {
+    min-width: 180px;
+}
+
+.gs-filter-input {
+    flex: 1;
+    max-width: 400px;
+}
+
+.gs-table-container {
+    overflow-x: auto;
+    background-color: #15152b;
+    border-radius: 1px;
+}
+
+.gs-table {
+    width: 100%;
+    
+}
+
+.gs-table th, .gs-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #2a2aff;
+}
+
+.gs-table th {
+    background-color: #2a2a3c;
+    color: #4cc9f0;
+    font-weight: 600;
+}
+
+.gs-table tr:hover {
+    background-color: #2a2a3c;
+}
+
+.gs-descripcion {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.gs-estado-select {
+    padding: 5px 8px;
+    border-radius: 1px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.gs-estado-pendiente {
+    background-color: #f84d1e;
+    color: #fefeff;
+}
+
+.gs-estado-atendida {
+    background-color: #43aa8b;
+    color: white;
+}
+
+.gs-estado-rechazada {
+    background-color: #f94144;
+    color: white;
+}
+
+.gs-action-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px 8px;
+    border-radius: 1px;
+}
+
+.gs-view {
+    color: #4cc9f0;
+}
+
+.gs-view:hover {
+    background-color: rgba(76, 201, 240, 0.1);
+}
+
+.gs-comment {
+    color: #f8961e;
+}
+
+.gs-comment:hover {
+    background-color: rgba(248, 150, 30, 0.1);
+}
+
+.gs-loading, .gs-error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+}
+
+.gs-error {
+    color: #f72585;
+}

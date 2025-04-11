@@ -79,7 +79,6 @@ app.post('/api/login', async (req, res) => {
         return res.status(400).json({ error: 'Email y contraseña requeridos' });
       }
 
-      // Consulta usando los nombres exactos de la BD
       const query = 'SELECT id, nombre, email, contraseña, tipo, telefono FROM usuarios WHERE email = ?';
       
       connection.query(query, [email], async (err, results) => {
@@ -141,13 +140,12 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Rutas protegidas (requieren autenticación)
-app.use('/api/usuarios', verifyToken, usuariosRoute);
-app.use('/api/puntos', verifyToken, puntosRoute);
-app.use('/api/solicitudes', verifyToken, solicitudRoute);
+app.use('/api/usuarios', usuariosRoute);
+app.use('/api/puntos', puntosRoute);
+app.use('/api/solicitudes', solicitudRoute);
 
 // Iniciar Swagger
 swaggerDocs(app);
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

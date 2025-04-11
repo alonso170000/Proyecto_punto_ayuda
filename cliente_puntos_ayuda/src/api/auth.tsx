@@ -1,4 +1,4 @@
-// src/api/auth.ts
+// src/api/auth.tsx
 import apiClient from './client';
 
 interface LoginResponse {
@@ -7,6 +7,7 @@ interface LoginResponse {
     id: string;
     name: string;
     email: string;
+    tipo: string;
   };
 }
 

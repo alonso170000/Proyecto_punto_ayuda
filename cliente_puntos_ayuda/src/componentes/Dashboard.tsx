@@ -1,17 +1,36 @@
-import { Link, Outlet } from "react-router-dom";
-import "./Dashboard.css"; // Importamos el archivo CSS
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import "./Dashboard.css";
+import { getAuthToken, removeAuthToken } from "../utils/authToken";
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        removeAuthToken();
+        navigate('/login');
+    };
+
     return (
         <div className="dashboard-container">
             {/* Menú lateral */}
             <aside className="sidebar">
-                <h2 className="sidebar-title">Dashboard</h2>
+                <div className="sidebar-header">
+                    <h2 className="sidebar-title">Panel Admin</h2>
+                    <button className="sidebar-logout" onClick={handleLogout}>
+                        Cerrar Sesión
+                    </button>
+                </div>
+                
                 <nav>
                     <ul className="sidebar-nav">
                         <li>
                             <Link to="/dashboard/puntos_ayuda" className="sidebar-link">
-                                Puntos de Ayuda
+                                <i className="fas fa-map-marker-alt"></i> Puntos de Ayuda
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/dashboard/solicitudes" className="asidebar-link">
+                                <i className="fas fa-hands-helping"></i> Solicitudes de Ayuda
                             </Link>
                         </li>
                     </ul>
@@ -20,10 +39,9 @@ const Dashboard = () => {
 
             {/* Área principal */}
             <main className="main-content">
-                <Outlet /> {/* Aquí se renderizarán las rutas anidadas (Alumnos o Carreras) */}
+                <Outlet /> 
             </main>
         </div>
     );
 };
-
 export default Dashboard;
