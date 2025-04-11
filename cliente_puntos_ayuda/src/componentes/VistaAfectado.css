@@ -112,7 +112,11 @@
   }
   
   .estado-atendida {
-    color: #2ecc71;
+    color: #00bb4e;
+  }
+
+  .estado-rechazada {
+    color: #ff1515;
   }
   
   /* Botón de cerrar sesión */
