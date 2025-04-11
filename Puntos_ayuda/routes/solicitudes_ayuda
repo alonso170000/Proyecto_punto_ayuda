@@ -159,6 +159,48 @@ const getPuntosConNecesidades = (req, res) => {
     });
 };
 
+// endpoint para actualizar solicitudes
+const putSolicitudAyuda = (req, res) => {
+    const { id } = req.params;
+    const { estado, admin_id } = req.body;
+
+    if (!admin_id) {
+        return res.status(400).json({ mensaje: "Se requiere ID de administrador" });
+    }
+
+    // Verificar permisos del administrador
+    connection.query('SELECT tipo FROM usuarios WHERE id = ?', [admin_id], (err, results) => {
+        if (err) {
+            console.error("Error al verificar administrador:", err);
+            return res.status(500).json({ mensaje: "Error interno del servidor" });
+        }
+
+        if (results.length === 0 || (results[0].tipo !== 'administrador' && results[0].tipo !== 'superadmin')) {
+            return res.status(403).json({ mensaje: "No autorizado" });
+        }
+
+        // Actualizar el estado
+        connection.query(
+            "UPDATE solicitudes_ayuda SET estado = ? WHERE id = ?",
+            [estado, id],
+            (err, result) => {
+                if (err) {
+                    console.error("Error al actualizar solicitud:", err);
+                    return res.status(500).json({ mensaje: "Error interno del servidor" });
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ mensaje: "Solicitud no encontrada" });
+                }
+
+                res.status(200).json({ mensaje: "Estado actualizado correctamente" });
+            }
+        );
+    });
+};
+
+
+router.put('/put/:id', verifyToken, putSolicitudAyuda);
 router.get('/admin', verifyToken, getSolicitudesAdmin);
 router.get('/necesidades', getPuntosConNecesidades);
 router.post('/post', verifyToken, postSolicitudAyuda);

@@ -41,16 +41,31 @@ const GestionSolicitudes = () => {
 
     const cambiarEstadoSolicitud = async (solicitudId: number, nuevoEstado: string) => {
         try {
-            await apiClient.put(`/solicitudes/${solicitudId}`, { 
+            const tokenPayload = JSON.parse(atob(getAuthToken()!.split('.')[1]));
+            
+            await apiClient.put(`/solicitudes/put/${solicitudId}`, { 
                 estado: nuevoEstado,
-                admin_id: JSON.parse(atob(getAuthToken()!.split('.')[1])).userId
+                admin_id: tokenPayload.userId
             });
+            
             setSolicitudes(solicitudes.map(s => 
                 s.id === solicitudId ? { ...s, estado: nuevoEstado } : s
             ));
+            
+            // Opcional: Mostrar feedback positivo
+            alert('Estado actualizado correctamente');
         } catch (err) {
             console.error('Error al actualizar solicitud:', err);
-            alert('Error al actualizar el estado');
+            
+            // Mensaje más descriptivo
+            const errorMessage = err.response?.data?.mensaje || 
+                                'Error al actualizar el estado. Verifica tus permisos.';
+            
+            alert(errorMessage);
+            
+            // Recargar datos para mantener consistencia
+            const response = await apiClient.get('/solicitudes/admin');
+            setSolicitudes(response.data);
         }
     };
 
